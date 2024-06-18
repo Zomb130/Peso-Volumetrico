@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculadora de peso volumétrico</title>
+  <link rel="stylesheet" href="styles.css"> <!-- Agregado el atributo href con la ruta correcta del archivo CSS -->
+</head>
+<body>
+  <header>
+    <h1>Calculadora de peso volumétrico</h1> 
+  </header>
+
+  <main> <!-- Etiqueta <main> para el contenido principal -->
+    <form id="calculadoraForm">
+      <label for="pais">País de origen</label>
+      <select name="pais" id="pais">
+        <option value="mexico">México</option>
+        <option value="estados_unidos">Estados Unidos</option>
+        <option value="china">China</option>
+      </select>
+
+      <label for="unidades">Unidades de medida</label>
+      <select name="unidades" id="unidades">
+        <option value="cm">Centímetros</option>
+        <option value="pulgadas">Pulgadas</option>
+      </select>
+
+      <label for="largo">Largo</label>
+      <input type="number" name="largo" id="largo">
+
+      <label for="ancho">Ancho</label>
+      <input type="number" name="ancho" id="ancho">
+
+      <label for="alto">Alto</label>
+      <input type="number" name="alto" id="alto">
+
+      <label for="peso_real">Peso Real (Kg)</label> <!-- Campo para ingresar el peso real en Kg -->
+      <input type="number" name="peso_real" id="peso_real">
+
+      <input type="button" value="Calcular" onclick="calcularPesoVolumetrico()">
+    </form>
+
+    <p>El peso volumétrico calculado es: <span id="resultado_volumetrico">-</span> Kg</p>
+    <p>El peso real del paquete es: <span id="resultado_real">-</span> Kg</p>
+  </main> <!-- Cierre de etiqueta <main> -->
+
+  <footer> <!-- Etiqueta <footer> para el pie de página -->
+    <h2>Observaciones y Recomendaciones</h2>
+    <p>
+      El peso volumétrico es un cálculo que se utiliza para determinar el peso de un paquete en base a su volumen. Este cálculo es utilizado por las empresas de transporte para determinar el costo del envío.
+    </p>
+    <p>
+      Para calcular el peso volumétrico, se utiliza la siguiente fórmula:
+      <strong>Peso volumétrico (Kg) = Longitud x Ancho x Alto / 5000</strong>
+    </p>
+    <p>
+      Donde:
+    </p>
+    <ul>
+      <li>Longitud, Ancho y Alto se pueden medir en centímetros (cm) o pulgadas (pulg), dependiendo de tu elección.</li>
+      <li>El divisor 5000 es el factor de conversión estándar para convertir el volumen resultante en kilogramos.</li>
+    </ul>
+    <p>
+      Recomendaciones adicionales:
+    </p>
+    <ul>
+      <li>El valor de 5000 es el estándar utilizado en todo el mundo para el cálculo del peso volumétrico.</li>
+      <li>Algunas empresas de transporte pueden tener factores de conversión diferentes, así que siempre es recomendable verificar las tarifas con cada empresa.</li>
+      <li>En general, se factura el mayor peso entre el peso real en Kg y el peso volumétrico calculado.</li>
+    </ul>
+  </footer>
+
+  <script>
+    function calcularPesoVolumetrico() {
+      const pais = document.getElementById("pais").value;
+      const unidades = document.getElementById("unidades").value;
+      const largo = parseFloat(document.getElementById("largo").value);
+      const ancho = parseFloat(document.getElementById("ancho").value);
+      const alto = parseFloat(document.getElementById("alto").value);
+      const pesoReal = parseFloat(document.getElementById("peso_real").value); // Obtener el peso real
+
+      // Factor de conversión
+      let factorConversion = 5000; // Valor estándar
+
+      // Verificar si se seleccionó pulgadas
+      if (unidades === "pulgadas") {
+        // Convertir las dimensiones a centímetros
+        const pulgadaACm = 2.54;
+        const largoCm = largo * pulgadaACm;
+        const anchoCm = ancho * pulgadaACm;
+        const altoCm = alto * pulgadaACm;
+
+        // Recalcular el factor de conversión
+        factorConversion = 139.7; // Valor estándar en pulgadas
+      }
+
+      // Calcular el volumen
+      const volumen = largo * ancho * alto;
+
+      // Calcular el peso volumétrico
+      const pesoVolumetrico = volumen / factorConversion;
+
+      // Actualizar los resultados en el documento HTML
+      document.getElementById("resultado_volumetrico").textContent = pesoVolumetrico.toFixed(2) + " Kg";
+      
+      // Comparar peso volumétrico y peso real para la facturación
+      if (pesoReal >= pesoVolumetrico) {
+        document.getElementById("resultado_real").textContent = pesoReal.toFixed(2) + " Kg (Se factura por el peso real)";
+      } else {
+        document.getElementById("resultado_real").textContent = pesoVolumetrico.toFixed(2) + " Kg (Se factura por el peso volumétrico)";
+      }
+    }
+  </script>
+</body>
+</html>
